@@ -43,13 +43,13 @@ def tabla(request, comp_id):
             entrenadores[resultado.entrenador_fuera.id]['derrotas'] += 1
 
             entrenadores[resultado.entrenador_casa.id]['elo'] += 20 - diferencia
-            entrenadores[resultado.entrenador_fuera.id]['elo'] -= 20 + diferencia
+            entrenadores[resultado.entrenador_fuera.id]['elo'] -= 20 - diferencia
         else:
             entrenadores[resultado.entrenador_casa.id]['derrotas'] += 1
             entrenadores[resultado.entrenador_fuera.id]['victorias'] += 1
 
             entrenadores[resultado.entrenador_casa.id]['elo'] -= 20 + diferencia
-            entrenadores[resultado.entrenador_fuera.id]['elo'] += 20 - diferencia
+            entrenadores[resultado.entrenador_fuera.id]['elo'] += 20 + diferencia
     entrenadores_lista = []
     for value in entrenadores.values():
         if value['total'] > 9:
