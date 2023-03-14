@@ -27,6 +27,10 @@ def tabla(request, comp_id):
         entrenadores[resultado.entrenador_fuera.id]['total'] += 1
         diferencia = entrenadores[resultado.entrenador_casa.id]['elo'] - entrenadores[resultado.entrenador_fuera.id]['elo']
         diferencia = math.trunc(diferencia/10)
+        if diferencia < -10:
+            diferencia = -10
+        elif diferencia > 10:
+            diferencia = 10
         if resultado.td_casa == resultado.td_fuera:
             entrenadores[resultado.entrenador_casa.id]['empates'] += 1
             entrenadores[resultado.entrenador_fuera.id]['empates'] += 1
