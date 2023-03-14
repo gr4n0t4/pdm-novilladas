@@ -1,0 +1,73 @@
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    .clasificado {
+        color: green;
+    }
+    </style>
+{% if resultados %}
+
+    <table>
+        <caption>Clasificacion</caption>
+
+        <tr>
+
+            <th>Entrenador</th>
+            <th>Total Partidos</th>
+            <th>Ganados</th>
+            <th>Empatados</th>
+            <th>Perdidos</th>
+            <th>ELO</th>
+        <tr>
+
+        {% for entrenador in entrenadores %}
+            <tr class={{ entrenador.clase }}>
+                <td>{{ entrenador.nombre }}</td>
+                <td>{{ entrenador.total }}</td>
+                <td>{{ entrenador.victorias }}</td>
+                <td>{{ entrenador.empates }}</td>
+                <td>{{ entrenador.derrotas }}</td>
+                <td>{{ entrenador.elo }}</td>
+            </tr>            
+        {% endfor %}
+    </table>
+    </br>
+    </br>
+
+    <table>
+        <caption>Resultados</caption>
+
+        <tr>
+            <th>Entrenador Casa</th>
+            <th>TD Casa</th>
+            <th>TD Fuera</th>
+            <th>Entrenador Fuera</th>
+        <tr>
+
+        {% for resultado in resultados %}
+            <tr>
+                <td>{{ resultado.entrenador_casa }}</td>
+                <td>{{ resultado.td_casa }}</td>
+                <td>{{ resultado.td_fuera }}</td>
+                <td>{{ resultado.entrenador_fuera }}</td>
+                
+            </tr>            
+        {% endfor %}
+    </table>
+    
+{% else %}
+    <p>No hay resultados</p>
+{% endif %}

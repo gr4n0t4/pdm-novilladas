@@ -1,0 +1,35 @@
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    .clasificado {
+        color: green;
+    }
+    </style>
+{% if competiciones %}
+    <table>
+        <tr>
+            <th>Competicion</th>
+        </tr>
+        {% for competicion in competiciones %}
+        <tr>
+            <td><a href=/competicion/{{ competicion.id }}>{{ competicion.nombre }}</a></td>
+        </tr>        
+        {% endfor %}
+    </table>
+
+{% else %}
+    <p>No hay competiciones</p>
+{% endif %}
