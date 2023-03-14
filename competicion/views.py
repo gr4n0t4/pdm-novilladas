@@ -53,7 +53,7 @@ def tabla(request, comp_id):
         if value['total'] > 0:
             entrenadores_lista.append(value)
 
-    context = {'resultados': resultados, 'entrenadores' : sorted(entrenadores_lista, key=lambda x: x.get('elo'), reverse=True)}
+    context = {'resultados': resultados, 'entrenadores' : sorted(entrenadores_lista, key=lambda x: x.get('elo'), reverse=True), 'competicion': competicion.nombre }
     return render(request, 'competicions/tabla.html', context)
 
 def index(request):

@@ -18,11 +18,9 @@
         color: green;
     }
     </style>
+<h1>Competiciones</h1>
 {% if competiciones %}
     <table>
-        <tr>
-            <th>Competicion</th>
-        </tr>
         {% for competicion in competiciones %}
         <tr>
             <td><a href=/pdm/competicion/{{ competicion.id }}>{{ competicion.nombre }}</a></td>
