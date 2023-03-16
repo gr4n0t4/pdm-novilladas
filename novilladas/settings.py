@@ -22,14 +22,16 @@ STATIC_ROOT = 'static'
 SECRET_KEY = os.environ.get('SECRET', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-FORCE_SCRIPT_NAME = '/pdm'
-BASE_URL='https://gr4n0t4.ddns.net'
-USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+DEBUG = os.environ.get('DEBUG', False)
+if not DEBUG:
 
-ALLOWED_HOSTS = ['https://gr4n0t4.ddns.net', '*']
+    FORCE_SCRIPT_NAME = '/pdm'
+    BASE_URL='https://gr4n0t4.ddns.net'
+    USE_X_FORWARDED_HOST = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

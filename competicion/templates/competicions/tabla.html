@@ -39,7 +39,7 @@
             <th>Ganados</th>
             <th>Empatados</th>
             <th>Perdidos</th>
-            <th>ELO</th>
+            <th>Puntos</th>
         <tr>
 
         {% for entrenador in entrenadores %}
@@ -49,7 +49,7 @@
                 <td>{{ entrenador.victorias }}</td>
                 <td>{{ entrenador.empates }}</td>
                 <td>{{ entrenador.derrotas }}</td>
-                <td>{{ entrenador.elo }}</td>
+                <td>{{ entrenador.puntos }}</td>
             </tr>            
         {% endfor %}
     </table>

@@ -9,6 +9,6 @@ def tabla(request, comp_id):
     return render(request, 'competicions/tabla.html', context)
 
 def index(request):
-    competiciones = Competicion.objects.order_by('-pub_date')
+    competiciones = Competicion.objects.filter(oculta=False).order_by('nombre')
     context = {'competiciones': competiciones}
     return render(request, 'competicions/index.html', context)

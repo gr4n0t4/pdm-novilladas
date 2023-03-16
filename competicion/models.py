@@ -4,8 +4,10 @@ from django.dispatch import receiver
 import math
 class Competicion(models.Model):
     nombre = models.CharField(max_length=200)
-    tabla = models.JSONField(default=[])
+    tabla = models.JSONField(default=dict, blank=True, null=True)
     pub_date = models.DateTimeField('date published')
+    clasica = models.BooleanField(default=False)
+    oculta = models.BooleanField(default=False)
     def __str__(self):
         return self.nombre
 
@@ -38,20 +40,23 @@ def update_table(competicion):
     entrenadores_obj = Entrenador.objects.order_by('nombre')
 
     entrenadores = {}
+    puntos = 1000
+    if competicion.clasica:
+        puntos = 0
     for entrenador in entrenadores_obj:
         entrenadores[entrenador.id] = {'nombre': entrenador.nombre,
                                        'total': 0,
                                        'victorias': 0,
                                        'empates': 0,
                                        'derrotas': 0,
-                                       'elo': 1000,
+                                       'puntos': puntos,
                                        'clase': ''
                                        }
                                        
     for resultado in resultados:
         entrenadores[resultado.entrenador_casa.id]['total'] += 1
         entrenadores[resultado.entrenador_fuera.id]['total'] += 1
-        diferencia = entrenadores[resultado.entrenador_casa.id]['elo'] - entrenadores[resultado.entrenador_fuera.id]['elo']
+        diferencia = entrenadores[resultado.entrenador_casa.id]['puntos'] - entrenadores[resultado.entrenador_fuera.id]['puntos']
         diferencia = math.trunc(diferencia/10)
         if diferencia < -10:
             diferencia = -10
@@ -60,28 +65,35 @@ def update_table(competicion):
         if resultado.td_casa == resultado.td_fuera:
             entrenadores[resultado.entrenador_casa.id]['empates'] += 1
             entrenadores[resultado.entrenador_fuera.id]['empates'] += 1
-
-            entrenadores[resultado.entrenador_casa.id]['elo'] -= diferencia
-            entrenadores[resultado.entrenador_fuera.id]['elo'] += diferencia
+            if competicion.clasica:
+                entrenadores[resultado.entrenador_casa.id]['puntos'] += 1
+                entrenadores[resultado.entrenador_fuera.id]['puntos'] += 1
+            else:                
+                entrenadores[resultado.entrenador_casa.id]['puntos'] -= diferencia
+                entrenadores[resultado.entrenador_fuera.id]['puntos'] += diferencia
 
         elif resultado.td_casa > resultado.td_fuera:
             entrenadores[resultado.entrenador_casa.id]['victorias'] += 1
             entrenadores[resultado.entrenador_fuera.id]['derrotas'] += 1
-
-            entrenadores[resultado.entrenador_casa.id]['elo'] += 20 - diferencia
-            entrenadores[resultado.entrenador_fuera.id]['elo'] -= 20 - diferencia
+            if competicion.clasica:
+                entrenadores[resultado.entrenador_casa.id]['puntos'] += 3
+            else:  
+                entrenadores[resultado.entrenador_casa.id]['puntos'] += 20 - diferencia
+                entrenadores[resultado.entrenador_fuera.id]['puntos'] -= 20 - diferencia
         else:
             entrenadores[resultado.entrenador_casa.id]['derrotas'] += 1
             entrenadores[resultado.entrenador_fuera.id]['victorias'] += 1
-
-            entrenadores[resultado.entrenador_casa.id]['elo'] -= 20 + diferencia
-            entrenadores[resultado.entrenador_fuera.id]['elo'] += 20 + diferencia
+            if competicion.clasica:
+                entrenadores[resultado.entrenador_fuera.id]['puntos'] += 3
+            else:  
+                entrenadores[resultado.entrenador_casa.id]['puntos'] -= 20 + diferencia
+                entrenadores[resultado.entrenador_fuera.id]['puntos'] += 20 + diferencia
     entrenadores_lista = []
     for value in entrenadores.values():
-        if value['total'] > 9:
+        if value['total'] > 9 and not competicion.clasica:
             value['clase'] = 'clasificado'
         if value['total'] > 0:
             entrenadores_lista.append(value)
 
-    competicion.tabla = sorted(entrenadores_lista, key=lambda x: x.get('elo'), reverse=True)
+    competicion.tabla = sorted(entrenadores_lista, key=lambda x: x.get('puntos'), reverse=True)
     competicion.save()
